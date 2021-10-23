@@ -1,0 +1,62 @@
+Hash functions: 
+
+OpenSSL command Line: free set of cryptographic tools 
+
+steps to update the software in several nodes
+1) Install or upgrade LibreSSL
+2) Navigate the help
+3) compute the hash of a file
+
+Step 1 ( Install or update LibreSSL)
+mac => terminal
+windows => WSL 2 - Windows subsystem for Linux 
+Linux => bash shell
+
+Commands
+OpenSSL -h => get all the help
+openssl version => check the version of OpenSSL
+brew install libressl => upgrade
+
+
+Step 2 ( download file that needs to be install )
+1) download from the sourece, check the hash eg ( asc, sha512) by clicking the hash.
+2) use OpenSSL command line to compute the Hash of download
+- terminal command
+   $ openssl -h => to check the sub commnad to check how to compute the digest of the file
+   $ man openssl => check the manul for all the OpenSSL command
+   $ /^dgst => dgst is the sub command, this will give more detail on sub command dgst
+   $ q => to exit the manul
+   
+   check the digest command use the one at the download Hash
+   $ cat ~/Download/<filename> | openssl digst -sha512 
+   
+now compare the value shown on the website. if the value is same then the download file has not been tampred with. 
+
+Collision Resistance: A strong hash function make harder for an attacker to find second file that produces same hash as the original.
+this property is known as Collision Resistance. 
+
+
+Validating JSON Web Tokens ( JWTs)
+claims: piece of information that issur can vouch for 
+Name: Sarah Jane
+Email: sarah@tardis.com
+Role: Companion
+
+JWT Components
+Header
+{
+	"alg": "HS256",
+	"typ": "JWT"
+}
+base64 encoded mRpcy5jb20iLCJyb2xlIjoiQ29tcGFuaWgulno
+
+Payload
+{
+	"sub": "12345",
+	"name": "Sarah Jane",
+	"email": "sarah@tardis.com",
+	"role": "Companion"
+}
+
+base 64 encoded eyJzdWliOilxMiMONTY3ODkwliwibmFtZSI6lINh
+mRpcy5jb20iLCJyb2xlIjoiQ29tcGFuaWgulno
