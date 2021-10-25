@@ -60,3 +60,9 @@ Payload
 
 base 64 encoded eyJzdWliOilxMiMONTY3ODkwliwibmFtZSI6lINh
 mRpcy5jb20iLCJyb2xlIjoiQ29tcGFuaWgulno
+
+Protecting Password:
+- Never Stored passwods in the clear
+- Use good Hashing for the Password
+- 
+
