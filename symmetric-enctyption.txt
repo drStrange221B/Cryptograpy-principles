@@ -1,0 +1,135 @@
+Encryption with AES:
+Need to share an API secret: Encrypt using AES 
+Share symmetric key over the phone ( different change should to share the key and cyphertext )
+
+Steps to do that 
+1) Generate an AES key
+2) Compute the cyphertext
+
+1) Generate an AES key
+  use openssl
+  $ openssl -h 
+  $ man openssl
+  $ /^rand
+  $ openssl rand -hex 32
+  84a4d3caff94778719a033ab0c4032d20c92c05d0b104253537743513dbc8e39
+  $ echo "keepitsecret" > api_secret.txt  => save test that need to be encry in a text file 
+  $ man openssl
+  $ /^enc
+  $ openssl enc -aes-256-ecb -in api_secret.txt -K 84a4d3caff94778719a033ab0c4032d20c92c05d0b104253537743513dbc8e39
+  T???ot???iZR#L
+  $ openssl enc -aes-256-ecb -in api_secret.txt -K 84a4d3caff94778719a033ab0c4032d20c92c05d0b104253537743513dbc8e39 > api_secret.enc
+  $ xxd api_secret.enc
+  00000000: 5491 f48b 1da5 6f74 fbc9 ed69 5a52 234c  T.....ot...iZR#L
+  $openssl enc -aes-256-ecb -d -in api_secret.enc -K 84a4d3caff94778719a033ab0c4032d20c92c05d0b104253537743513dbc8e39   => decrypt with key 
+  keepitsecret
+  
+Generate password base key generation to transfert key
+PBKDF2: compute a key from a PassPhrase
+
+HMAC => length extension attack
+iteration => brute force attack
+salt => Precomputed tables
+
+Easy to memorize
+only use salt. it is no use for attacker 
+
+
+how to generated a pass phrase generated key ( use PBKDF2)
+  $ openssl enc -aes-256-ecb -in api_secret.txt -pbkdf2 > api_secret.enc
+  password: this is a test
+  password: this is a test
+  
+  $ xxd api_secret.enc 
+00000000: 5361 6c74 6564 5f5f 320d 22c1 d896 ee12  Salted__2.".....
+00000010: 7d30 0cab ce20 1294 3479 6764 1ebe 506c  }0... ..4ygd..Pl
+
+   decrypt the file
+  $ openssl enc -aes-256-ecb -in api_secret.enc -d -pbkdf2
+   password: this is a test
+   password: this is a test
+   keepitsecret
+   
+   
+   Use of Block chain cipher
+   
+   $ $ openssl enc -aes-256-cbc -in Document.pdf -pbkdf2 > Document-pdf.enc
+   password:
+   password: 
+   $ xxd Document-pdf.enc    => no visible pattern 
+   $ openssl enc -aes-256-cbc -in Document-pdf.enc -d -pbkdf2 > Document-pdf.pdf   => decrypt
+   password: 
+   $ open Document-pdf.pdf
+   
+   
+   
+   
+  
+  
+  
+  
+  
+  
+  Password Entropy H = Llog2N   L=> length of Password and N is size of alphabet
+  
+  Ramdom Letters
+  vlwusgalfi
+  
+  H = 10log2(26)
+  H = 47 
+  
+  Dictionary Words
+  
+  N = Number of Words
+  20,000 <N<1,000,000
+  
+  14<log2N<20
+  
+  Pass Pharse
+  correct horse battery staple
+  
+  N = 20,000
+  L= 4
+  
+  56 = 4 log2(20000)
+  
+  
+  
+  Block Ciphers
+  there is issue with above method. The cipher has some pattern if we were to encrypt large file. 
+  
+ $ openssl enc -aes-256-ecb -in Document.pdf -pbkdf2 > doc-encrypt.enc
+ $ xxd doc-encrypt.enc    => notice the visible pattern
+ $ openssl enc -aes-256-ecb -in doc-encrypt.enc -d -pbkdf2 > doct.pdf
+  
+  we need diffusion: 
+  - hide patterns in the plaintext
+  - diffuse information across ciphertext
+  
+  Confusion and diffusion 
+  Cipher text are the result of key and plain text. 
+  
+  Confusion is the relation between key and cophertext complication 
+  Diffusion is the relation between plain text and cipher text complication
+  
+  
+  different scenarios
+  1) Electronic Code Book => self synchronizing
+  2) Cipher Block Chaining => Parallel decryption  provide good diffusion 
+  3) cipher Feedback => No padding
+  4) Output Feedback => No padding 
+  
+  Initialization Vectors: Initialization Vector shared in the clear and gives the attacker no advantage
+  
+  Stream cipher
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
